@@ -1,0 +1,22 @@
+---
+  - name: "Add nginx stable repository to apt"
+      apt_repository:
+        repo: deb http://nginx.org/packages/ubuntu/ xenial nginx
+        state: present
+
+    - name: "Install Nginx Web Server"
+      apt:
+        name: nginx-full
+        state: present
+        update_cache: yes
+
+    - name: "Remove nginx default virtual host"
+      file:
+        path: "/etc/nginx/sites-enabled/default"
+        state: absent
+
+    - name: "Enable nginx in systemd"
+      systemd:
+        name: nginx
+        state: restarted
+        enabled: yes

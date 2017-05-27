@@ -1,0 +1,79 @@
+---
+  # Update repository and ugprade OS to latest
+  - name: Update and Upgrade
+    apt:
+      upgrade: dist
+      update_cache: yes
+
+  # Install some utilities that all servers benefit from and most of our scripts require
+  - name: Install dependencies
+    apt: name={{ item }} state=latest update_cache=yes
+    with_items:
+    - unzip
+    - imagemagick
+    - ssmtp
+    - libtool-bin
+    - libzip-dev
+    - lbzip2
+    - libxml2-dev
+    - bzip2
+    - libbz2-dev
+    - libjpeg-dev
+    - libxpm-dev
+    - libxpm-dev
+    - libgmp-dev
+    - libgmp3-dev
+    - libmcrypt-dev
+    - libmysqlclient-dev
+    - libpspell-dev
+    - librecode-dev
+    - libpcre3-dev
+    - ufw
+    - htop
+    - wget
+    - curl
+    sudo: yes
+
+  # Install firewall and initial setup
+  - name: Initial Setup of firewall (tcp)
+    ufw:
+      rule: allow
+      proto: tcp
+      to_port: "{{ item }}"
+    with_items:
+      - ftp
+      - ssh
+      - http
+      - https
+      - ssmtp
+      - smtp
+      - pop3
+      - pop3s
+      - imap
+      - imaps
+      - domain
+
+  - name: Initial setup of firewall (udp)
+    ufw:
+      rule: allow
+      to_port: '{{ item }}'
+      proto: udp
+    with_items:
+      - domain
+      - https
+      - ssh
+
+  - name: Add groups
+    group:
+      name: '{{ item }}'
+      state: present
+    with_items:
+      - webapp
+      - sshgrp
+
+  - name: Add user
+    user:
+      name: webapp
+      comment: "Web Application"
+      group: webapp
+      shell: /usr/sbin/nologin
