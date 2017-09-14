@@ -1,0 +1,28 @@
+---
+      - name: "Download PHP"
+        get_url:
+          url: "http://de2.php.net/get/php-7.1.5.tar.gz/from/this/mirror"
+          dest: /usr/local/src/php-7.1.5.tar.gz
+      - name: "Extract PHP"
+        unarchive:
+          src: /usr/local/src/php-7.1.5.tar.gz
+          dest: /usr/local/src/
+          remote_src: True
+
+      - name: "Compile PHP"
+        shell: '{{ item }}'
+        args:
+          chdir: /usr/local/src/php-7.1.5/
+        with_items:
+          - "./configure --prefix=/usr/local/php --enable-fpm --with-fpm-group=webapp --with-fpm-user=webapp --enable-mbstring --enable-zip --enable-bcmath --enable-pcntl --enable-ftp --enable-sockets --enable-exif --enable-intl --enable-calendar --enable-sysvmsg --enable-sysvsem --enable-sysvshm --enable-wddx --enable-soap --with-curl --with-mcrypt --with-mhash --with-pear --with-xsl --with-iconv --with-gmp --with-gd --with-jpeg-dir=/usr --with-png-dir=/usr --with-zlib-dir=/usr --with-xpm-dir=/usr --with-freetype-dir=/usr --enable-gd-native-ttf --enable-gd-jis-conv --with-openssl --with-gettext=/usr --with-zlib=/usr --with-bz2=/usr --with-pdo-mysql=/usr --enable-mysqlnd && make && make install"
+
+      - name:  "Add PHP-FPM to systemd"
+        get_url:
+          url: http://files.dpvps.com/php-fpm.systemd.txt
+          dest: /lib/systemd/system/php-fpm.service
+
+      - name: "Enable PHP at boot"
+        systemd:
+          name: php-fpm
+          enabled: yes
+          state: restarted

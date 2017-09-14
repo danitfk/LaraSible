@@ -1,0 +1,22 @@
+---
+  - hosts: ansible1
+    user: root
+    tasks:
+
+      - name: "Install bind DNS Server"
+        apt:
+          name: "bind9"
+          state: latest
+
+      - name: "Change default listener"
+        shell: '{{ item }}'
+        with_items:
+          - "/bin/sed -i 's/\/\/ forwarders {/ forwarders {/g' /etc/bind/named.conf.options"
+          - "/bin/sed -i 's/\/\/ 	0.0.0.0;/ 	0.0.0.0/g' /etc/bind/named.conf.options"
+          - "/bin/sed -i 's/\/\/ };/ };/g' /etc/bind/named.conf.options"
+
+      - name: "Enable bind9 at boot"
+        systemd:
+          name: bind9
+          state: restarted
+          enabled: yes

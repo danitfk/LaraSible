@@ -1,46 +1,41 @@
 ---
-- hosts: ansible1
-  user: root
-  tasks:
+  - name: "Add MariaDB 10.2 to ubuntu repository"
+    apt_repository:
+      repo: deb http://ftp.hosteurope.de/mirror/mariadb.org/repo/10.2/ubuntu xenial main
+      state: present
 
-    - name: "Add MariaDB 10.2 to ubuntu repository"
-      apt_repository:
-        repo: deb http://ftp.hosteurope.de/mirror/mariadb.org/repo/10.2/ubuntu xenial main
-        state: present
+  - name: "Add MariaDB repository key to apt"
+    command: apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
 
-    - name: "Add MariaDB repository key to apt"
-      apt_key:
-          keyserver: keyserver.ubuntu.com
-          id: 0xF1656F24C74CD1D8
+  - name: "Install MariaDB server"
+    apt:
+      name: '{{ item }}'
+      state: latest
+      update_cache: yes
+      allow_unauthenticated: yes
+    with_items:
+      - mariadb-server-10.2
+      - mariadb-client-10.2
+      - libmariadb-dev
+      - mariadb-common
 
-    - name: "Install MariaDB server"
-      apt:
-        name: '{{ item }}'
-        state: latest
-        update_cache: yes
-      with_items:
-        - mariadb-server-10.2
-        - mariadb-client-10.2
-        - libmariadb-dev
-        - mariadb-common
+  - name: "Enable mariadb in systemd"
+    systemd:
+      name: mariadb
+      enabled: yes
 
-    - name: "Enable mariadb in systemd"
-      systemd:
-        name: mariadb
-        enabled: yes
+  - name: Get list of hosts for the anonymous user.
+    command: mysql -NBe 'SELECT Host FROM mysql.user WHERE User = ""'
+    register: mysql_anonymous_hosts
+    changed_when: false
 
-    - name: Get list of hosts for the anonymous user.
-      command: mysql -NBe 'SELECT Host FROM mysql.user WHERE User = ""'
-      register: mysql_anonymous_hosts
-      changed_when: false
-
-    - name: Remove anonymous MySQL users.
-      mysql_user:
-        name: ""
-        host: "{{ item }}"
-        state: absent
-      with_items: mysql_anonymous_hosts.stdout_lines
+  - name: Remove anonymous MySQL users.
+    mysql_user:
+      name: ""
+      host: "{{ item }}"
+      state: absent
+    with_items: mysql_anonymous_hosts.stdout_lines
 
     # MySQL also comes with a test database which is not needed, so let's drop it.
-    - name: Drop MySQL test database
-      mysql_db: name=test state=absent
+  - name: Drop MySQL test database
+    mysql_db: name=test state=absent

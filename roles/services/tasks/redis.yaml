@@ -1,0 +1,21 @@
+---
+  - name: "Install Redis Server"
+      apt:
+        name: "redis-server"
+        state: latest
+
+    - name: "Enable redis in systemd"
+      systemd:
+        name: redis-server
+        state: started
+        enabled: yes
+
+    - name: "Configure memory usage and policy"
+      shell: '{{ item }}'
+      with_items:
+        - "echo 'maxmemory 256mb' >> /etc/redis/redis.conf"
+        - "echo 'maxmemory-policy allkeys-lru' >> /etc/redis/redis.conf"
+    - name: "Restart Redis Server"
+      systemd:
+        name: redis-server
+        state: restarted

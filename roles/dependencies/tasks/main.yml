@@ -28,9 +28,17 @@
     - libpspell-dev
     - librecode-dev
     - libpcre3-dev
+    - libssl-dev
+    - libsslcommon2-dev
+    - pkg-config
+    - libgd-dev
+    - libcurl4-openssl-dev
+    - libxslt1-dev
     - ufw
     - htop
     - wget
+    - python-mysqldb
+    - libmysqlclient-dev
     - curl
     sudo: yes
 

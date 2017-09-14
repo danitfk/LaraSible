@@ -1,2 +1,6 @@
 ---
 - include: nginx.yaml
+- include: mariadb.yaml
+# - include: redis.yaml
+- include: php-fpm.yaml
+# - include: bind.yaml
