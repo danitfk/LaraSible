@@ -18,6 +18,7 @@
       - mariadb-client-10.2
       - libmariadb-dev
       - mariadb-common
+      - libmysqlclient-dev
 
   - name: "Enable mariadb in systemd"
     systemd:
