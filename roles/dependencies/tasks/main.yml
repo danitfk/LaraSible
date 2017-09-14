@@ -1,4 +1,8 @@
 ---
+  # Install python
+  - name: "Install python on machine"
+    raw: apt -y update && apt install -y python-minimal
+
   # Update repository and ugprade OS to latest
   - name: Update and Upgrade
     apt:
