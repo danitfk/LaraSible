@@ -1,8 +1,4 @@
 ---
-  - hosts: ansible1
-    user: root
-    tasks:
-
       - name: "Install bind DNS Server"
         apt:
           name: "bind9"
