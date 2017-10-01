@@ -8,7 +8,7 @@ webappuser: webapp
 php_version: 7.1
 php_version2: false
 
-# Misc Valid options: Yes,no
+# Misc Valid options: yes,no
 fail2ban: no
 monit: no
 bind: no

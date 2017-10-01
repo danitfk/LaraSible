@@ -88,4 +88,4 @@
       name: webapp
       comment: "Web Application"
       group: webapp
-      shell: /usr/sbin/nologin
+      shell: /bin/bashh
