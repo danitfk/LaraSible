@@ -1,0 +1,15 @@
+# Main domain for first application. Valid options: FQDN address
+maindomain: srv.test.com
+
+# User for running web application. Valid Options: *nix user format
+webappuser: webapp
+
+# PHP Version for php-fpm(s). Valid options: 5.3, 5.4, 5.5, 5.6, 7.0, 7.1, false
+php_version: 7.1
+php_version2: false
+
+# Misc Valid options: Yes,no
+fail2ban: no
+monit: no
+bind: no
+redis: no
