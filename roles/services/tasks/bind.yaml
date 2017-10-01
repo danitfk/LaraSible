@@ -3,6 +3,7 @@
         apt:
           name: "bind9"
           state: latest
+        when: bind == "yes"
 
       - name: "Change default listener"
         replace: '{{ item }}'
@@ -11,6 +12,8 @@
          - "/bin/sed -i 's|// forwarders {/ forwarders {|g' /etc/bind/named.conf.options"
          - "/bin/sed -i 's|// 	0.0.0.0;/ 	0.0.0.0|g' /etc/bind/named.conf.options"
          - "/bin/sed -i 's|// };/ };|g' /etc/bind/named.conf.options"
+        when: bind == "yes"
+
 # to do: change bind default listener with j2 templates
       - name: "Change default listener"
       
@@ -19,3 +22,5 @@
           name: bind9
           state: restarted
           enabled: yes
+        when: bind == "yes"
+
