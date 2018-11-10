@@ -13,3 +13,4 @@ fail2ban: no
 monit: no
 bind: no
 redis: no
+server_user: modir

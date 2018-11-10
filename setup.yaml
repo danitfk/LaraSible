@@ -6,10 +6,6 @@
   sudo: true
   roles:
     - dependencies
-    - database
-    - webserver
-    - ftp
-    - monit
-    - wordpress
+    - services
   post_tasks:
     - shell: service nginx reload
